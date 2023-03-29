@@ -1,7 +1,7 @@
 # desafioFullStack
 Projeto de Desafio Full Stack para alocação
 
-Tecnologias Usadas
+Tecnologias Usadas:
 ->Spring Boot
 ->Banco MySQL
 ->Angular 13
