@@ -117,7 +117,7 @@ public class EmpresaService {
 				empresa.setNomeFantasia(newEmpresa.getNomeFantasia());
 
 				empresaRepository.save(empresa);
-				return new ResponseEntity<Empresa>(empresa, HttpStatus.OK);
+				return new ResponseEntity<Empresa>(empresa, HttpStatus.NON_AUTHORITATIVE_INFORMATION);
 			} else
 				throw new IdDoesNotExistException(id, "Empresa");
 		} catch (IdDoesNotExistException idN) {
@@ -144,13 +144,15 @@ public class EmpresaService {
 				String nomeEmpresa = empresa.get().getNomeFantasia();
 				empresaRepository.delete(empresa.get());
 			return new ResponseEntity(String.format("Empresa %s com id %d excluida com sucesso!", 
-					nomeEmpresa,id),HttpStatus.OK);
+					nomeEmpresa,id),HttpStatus.NO_CONTENT);
 			} else
 				throw new IdDoesNotExistException(id, "Empresa");
 		} catch (IdDoesNotExistException idN) {
 			return new ResponseEntity(idN.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	
 
 	public void checkDataCnpj(Empresa empresa) throws EmptyFieldException, IsDigitException, DataAlreadyExistsException,
 			InvalidFieldSizeException, NoValuesNegativesException {

@@ -2,6 +2,7 @@ package acc.br.crudspringbackend.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,13 +46,12 @@ public class Fornecedor implements Serializable
     @Column(name = "cnpjcpf", length = 14, nullable = false)
     private String cnpjCpf; 
 
-    @Column(name = "rg", length=7)
+    @Column(name = "rg", length=8)
     private String rg;
     
     @Column(name = "datanascimento")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "GMT-3")
-	@Temporal(TemporalType.TIMESTAMP)
-    private Date dataNascimento;
+	private Date dataNascimento;
     
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -72,5 +72,6 @@ public class Fornecedor implements Serializable
     @JoinColumn(name = "empresaIdEmpresa",referencedColumnName = "idEmpresa",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Empresa empresa;
+        
 
 }

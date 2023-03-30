@@ -43,7 +43,7 @@ public class EmpresaController {
 		return empresaService.updateEmpresa(id, newEmpresa);
 	}
 
-	@RequestMapping(value = "/api/agencias/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/api/empresa/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<String> deleteEmpresa(@PathVariable(value = "id") long id) {
 		return empresaService.deleteEmpresa(id);
 	}
