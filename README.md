@@ -8,6 +8,9 @@ BACK_END:
 ->maven
 ->JDK 17(LTS)
 ->Banco MySQL
+->STS 4(version4.17.2)
+->Swagger
+->Postman
 
 FRONT_END:
 ->Angular 13
