@@ -1,9 +1,11 @@
+import { EmpresasService } from './../services/empresas.service';
 import { EnderecoService } from './../services/endereco.service';
 import { Empresas } from './../_model/empresas';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Endereco } from '../_model/endereco';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-empresas-form',
@@ -29,12 +31,14 @@ export class EmpresasFormComponent implements OnInit{
   public enderecoGet:Endereco | undefined;
 
   constructor(private formBuilder: FormBuilder, private enderecoService:EnderecoService,
-    private _snackBar: MatSnackBar ){
+    private _snackBar: MatSnackBar ,private empresasService:EmpresasService){
 
   };
 
   ngOnInit(): void {
+
     this.empresaForm = this.formBuilder.group({
+      idEmpresa: [this.editableEmpresa != null ? this.editableEmpresa.idEmpresa : '' ],
       nomefantasia: [this.editableEmpresa != null ? this.editableEmpresa.nomefantasia : '' , Validators.required],
       cnpj: [this.editableEmpresa != null ? this.editableEmpresa.cnpj : '' , [Validators.required,Validators.minLength(14),Validators.pattern("[0-9]+")]],
       cep: [this.editableEmpresa != null ? this.editableEmpresa.cep : '' , [Validators.required, Validators.minLength(8),Validators.pattern("[0-9]+")]],
@@ -53,8 +57,44 @@ export class EmpresasFormComponent implements OnInit{
   }
 
   public save(){
-    console.log('Salvar clicado');
-    this.closeModalEventEmitter.emit(true);
+    if(this.actionName == 'Editar'){
+
+      console.log(this.empresaForm.controls['idEmpresa'].value);
+      this.empresasService.saveUpdate({
+      cnpj:this.empresaForm.controls['cnpj'].value,
+      nomefantasia:this.empresaForm.controls['nomefantasia'].value,
+      cep:this.empresaForm.controls['cep'].value,
+      telefone:this.empresaForm.controls['telefone'].value},
+      this.empresaForm.controls['idEmpresa'].value
+      ).subscribe(
+        (resp)=> {
+          this._snackBar.open(`Empresa ${this.empresaForm.controls['nomefantasia'].value} Editada com Sucesso!`,'',{duration: 10000});
+          this.closeModalEventEmitter.emit(true);
+          window.location.reload();
+        },
+        (error:HttpErrorResponse)=>
+        {
+          this._snackBar.open(`Status: ${error.status}-${error.statusText}; Message: ${error.error}`,'',{duration: 10000});
+          return null;
+        });
+    }else{
+
+      this.empresasService.saveNew({
+      cnpj:this.empresaForm.controls['cnpj'].value,
+      nomefantasia:this.empresaForm.controls['nomefantasia'].value,
+      cep:this.empresaForm.controls['cep'].value,
+      telefone:this.empresaForm.controls['telefone'].value}).subscribe(
+        (resp)=> {
+          this._snackBar.open(`Empresa ${this.empresaForm.controls['nomefantasia'].value} Salva com Sucesso!`,'',{duration: 10000});
+          this.closeModalEventEmitter.emit(true);
+          window.location.reload();
+        },
+        (error:HttpErrorResponse)=>
+        {
+          this._snackBar.open(`Status: ${error.status}-${error.statusText}; Message: ${error.error}`,'',{duration: 10000});
+          return null;
+        });
+      }
   }
 
   public buscarEndereco(cep: string){

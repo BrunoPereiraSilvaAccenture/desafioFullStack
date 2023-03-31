@@ -20,6 +20,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -38,6 +39,7 @@ public class Fornecedor implements Serializable
 	
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty("idFornecedor")
     @Column(name = "idFornecedor")
     private Long id;
 

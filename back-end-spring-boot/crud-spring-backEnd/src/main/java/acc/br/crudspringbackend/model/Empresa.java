@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,12 +28,14 @@ public class Empresa implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
+	@JsonProperty("idEmpresa")
 	@Column(name = "idEmpresa")
 	private Long id;
 
 	@Column(name = "cnpj", length = 14, nullable = false)
 	private String cnpj;
 
+	@JsonProperty("nomefantasia")
 	@Column(name = "nomefantasia", nullable = false)
 	private String nomeFantasia;
 
