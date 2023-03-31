@@ -1,0 +1,118 @@
+<div class="w-800">
+  <mat-card>
+    <mat-card-header class="mb-5">
+      <mat-card-title>{{ actionName }} Empresa</mat-card-title>
+    </mat-card-header>
+
+    <mat-divider></mat-divider>
+
+    <mat-card-content>
+      <form
+        [formGroup]="empresaForm"
+        #checklistFormDirective="ngForm"
+        class="flx-clmn"
+      >
+        <div>
+          <mat-form-field appearance="outline" class="mr-10">
+            <mat-label>CNPJ</mat-label>
+            <input
+              matInput
+              #cpnj
+              maxlength="14"
+              placeholder="Ex. 00000000000000"
+              formControlName="cnpj"
+            />
+            <mat-hint align="end">{{ cpnj.value.length }} / 14</mat-hint>
+            <mat-error *ngIf="empresaForm.get('cnpj')?.hasError('required')"
+              >Cnpj é obrigatório</mat-error
+            >
+            <mat-error *ngIf="empresaForm.get('cnpj')?.hasError('minlength')"
+              >Cnpj deve conter 14 digitos</mat-error
+            >
+            <mat-error *ngIf="empresaForm.get('cnpj')?.hasError('pattern')"
+              >Cnpj deve ser numerico</mat-error
+            >
+          </mat-form-field>
+
+        </div>
+        <div>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nome Fantasia</mat-label>
+            <input matInput type="text" formControlName="nomefantasia" />
+            <mat-error
+              *ngIf="empresaForm.get('nomefantasia')?.errors?.['required']"
+              >Nome Fantasia é obrigatório</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="outline" class="mr-10">
+            <mat-label>Cep</mat-label>
+            <input
+              matInput
+              #cep
+              maxlength="8"
+              placeholder="Ex. 00000000"
+              formControlName="cep"
+              (keyup.enter)="buscarEndereco(cep.value)"
+            />
+            <mat-hint align="end">{{ cep.value.length }} / 8</mat-hint>
+            <mat-error *ngIf="empresaForm.get('cep')?.hasError('required')"
+              >Cep é obrigatório</mat-error
+            >
+            <mat-error *ngIf="empresaForm.get('cep')?.hasError('minlength')"
+              >Cep deve conter 8 digitos</mat-error
+            >
+            <mat-error *ngIf="empresaForm.get('cep')?.hasError('pattern')"
+              >Cep deve ser numerico</mat-error
+            >
+          </mat-form-field>
+        </div>
+
+        <div>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Endereco</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="endereco"
+              class="mr-10"
+              readonly
+            />
+            </mat-form-field>
+
+        </div>
+
+        <div>
+
+          <mat-form-field appearance="outline" class="w-79 mr-1p">
+            <mat-label>Cidade</mat-label>
+            <input
+              matInput
+              type="text"
+              formControlName="cidade"
+              class="mr-10"
+              readonly
+            />
+            </mat-form-field>
+
+          <mat-form-field appearance="outline" class="w-20" >
+            <mat-label>UF</mat-label>
+            <input matInput type="text" formControlName="uf" readonly
+            [ngModel]="enderecoGet != undefined ? enderecoGet.uf : undefined"/>
+          </mat-form-field>
+
+        </div>
+
+      </form>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions class="flx-center-row flx-evly">
+      <button mat-raised-button color="warn" (click)="cancel()" class="mr-10">
+        Cancelar
+      </button>
+      <button mat-raised-button color="primary" (click)="save()">Salvar</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

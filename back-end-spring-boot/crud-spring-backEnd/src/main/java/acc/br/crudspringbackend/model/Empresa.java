@@ -34,13 +34,19 @@ public class Empresa implements Serializable {
 	@Column(name = "nomefantasia", nullable = false)
 	private String nomeFantasia;
 
+	@Column(name="telefone", nullable = true)
+    private String telefone;
+	
 	@Column(name = "cep", length = 8, nullable = false)
 	private String cep;
 	
-	@Column(name = "estado", length = 2, nullable = false)
-	private String estado;
+	@Column(name = "uf", length = 2, nullable = false)
+	private String uf;
 	
 	@Column(name = "endereco", nullable = false)
 	private String endereco;
+	
+	@Column(name = "cidade", nullable = false)
+	private String cidade;
 
 }

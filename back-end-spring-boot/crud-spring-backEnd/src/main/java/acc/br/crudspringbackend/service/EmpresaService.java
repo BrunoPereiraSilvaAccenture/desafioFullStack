@@ -39,7 +39,7 @@ public class EmpresaService {
 				throw new EmptyTableException("Empresas");
 
 			return new ResponseEntity<>(empresas, HttpStatus.OK);
-		} catch (EmptyTableException eTE) {			
+		} catch (EmptyTableException eTE) {
 			return new ResponseEntity(eTE.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
@@ -63,16 +63,20 @@ public class EmpresaService {
 			checkDataNomeFantasia(empresa);
 
 			ResponseEntity<Endereco> endereco = cepService.consumirApi(empresa.getCep());
-			
+
 			if (endereco == null)
 				throw new ValueNotExistException("CEP", empresa.getCep());
-			
+
 			checkDataEndereco(empresa, endereco.getBody());
 
-			empresa.setEstado(endereco.getBody().getUf());
-			empresa.setEndereco(String.format("End: %s , Bairro: %s, Cidade: %s", endereco.getBody().getLogradouro(),
-					endereco.getBody().getBairro(), endereco.getBody().getCidade()));
+			checkTelefone(empresa);
+			
+			empresa.setUf(endereco.getBody().getUf());
+			empresa.setEndereco(String.format("End: %s , Bairro: %s", endereco.getBody().getLogradouro(),
+					endereco.getBody().getBairro()));
 
+			empresa.setCidade(endereco.getBody().getCidade());
+			
 			empresaRepository.save(empresa);
 			return new ResponseEntity<Empresa>(empresa, HttpStatus.CREATED);
 
@@ -101,17 +105,21 @@ public class EmpresaService {
 
 				ResponseEntity<Endereco> endereco = cepService.consumirApi(newEmpresa.getCep());
 				Empresa empresa = oldEmpresa.get();
-				
+
 				if (endereco == null)
 					throw new ValueNotExistException("CEP", newEmpresa.getCep());
-				
-				
+
 				checkDataEndereco(newEmpresa, endereco.getBody());
 
-				empresa.setEstado(endereco.getBody().getUf());
-				empresa.setEndereco(String.format("End: %s , Bairro: %s, Cidade: %s", endereco.getBody().getLogradouro(),
-						endereco.getBody().getBairro(), endereco.getBody().getCidade()));
+				checkTelefone(newEmpresa);
+				
+				empresa.setUf(endereco.getBody().getUf());
+				empresa.setEndereco(
+						String.format("End: %s , Bairro: %s", endereco.getBody().getLogradouro(),
+								endereco.getBody().getBairro()));
 
+				empresa.setCidade(endereco.getBody().getCidade());
+				
 				empresa.setCep(newEmpresa.getCep());
 				empresa.setCnpj(newEmpresa.getCnpj());
 				empresa.setNomeFantasia(newEmpresa.getNomeFantasia());
@@ -143,16 +151,14 @@ public class EmpresaService {
 			if (empresa.isPresent()) {
 				String nomeEmpresa = empresa.get().getNomeFantasia();
 				empresaRepository.delete(empresa.get());
-			return new ResponseEntity(String.format("Empresa %s com id %d excluida com sucesso!", 
-					nomeEmpresa,id),HttpStatus.NO_CONTENT);
+				return new ResponseEntity(String.format("Empresa %s com id %d excluida com sucesso!", nomeEmpresa, id),
+						HttpStatus.NO_CONTENT);
 			} else
 				throw new IdDoesNotExistException(id, "Empresa");
 		} catch (IdDoesNotExistException idN) {
 			return new ResponseEntity(idN.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	
 
 	public void checkDataCnpj(Empresa empresa) throws EmptyFieldException, IsDigitException, DataAlreadyExistsException,
 			InvalidFieldSizeException, NoValuesNegativesException {
@@ -164,7 +170,6 @@ public class EmpresaService {
 
 		if (empresa.getCnpj().length() != 14)
 			throw new InvalidFieldSizeException("CNPJ", empresa.getCnpj().length(), "14");
-			
 
 		if (empresaRepository.existsByCnpj(empresa.getCnpj()))
 			throw new DataAlreadyExistsException("CNPJ", empresa.getCnpj());
@@ -188,12 +193,27 @@ public class EmpresaService {
 
 		if (!empresa.getCep().matches("[0-9]+"))
 			throw new IsDigitException("CEP");
-		
+
 		if (empresa.getCep().length() != 8)
 			throw new InvalidFieldSizeException("CEP", empresa.getCep().length(), "8");
-		
+
 		if (endereco.getUf().length() != 2)
 			throw new InvalidFieldSizeException("Estado", endereco.getUf().length(), "2");
+	}
+
+	public void checkTelefone(Empresa empresa) throws EmptyFieldException, IsDigitException,
+			DataAlreadyExistsException, InvalidFieldSizeException, NoValuesNegativesException, ValueNotExistException {
+
+		if (empresa.getTelefone().isEmpty())
+			throw new EmptyFieldException("Telefone");
+
+		if (!empresa.getTelefone().matches("[0-9]+"))
+			throw new IsDigitException("Telefone");
+
+		if (empresa.getTelefone().length() > 11 || empresa.getTelefone().length() < 10)
+			throw new InvalidFieldSizeException("Telefone", empresa.getTelefone().length(), "10(para fixo) ou 11(celular)");
+
+		
 	}
 
 }

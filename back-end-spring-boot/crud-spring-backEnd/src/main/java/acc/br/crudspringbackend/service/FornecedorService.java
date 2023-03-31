@@ -132,9 +132,9 @@ public class FornecedorService {
 			if (!empresaRepository.existsById(empresaId)) {
 				throw new IdDoesNotExistException(empresaId, "Fornecedor");
 			}
-						
+
 			System.out.println(fornecedor);
-			
+
 			checkDocuments(fornecedor);
 
 			if (fornecedor.getTipoDocumento().toUpperCase().equals(TipoDocumentoEnum.CNPJ.getValor().toUpperCase()))
@@ -147,11 +147,14 @@ public class FornecedorService {
 			if (endereco == null)
 				throw new ValueNotExistException("CEP", fornecedor.getCep());
 
-			checkDados(fornecedor, endereco.getBody());
+			checkDados(fornecedor, endereco.getBody(), empresaId);
 
-			fornecedor.setEstado(endereco.getBody().getUf());
-			fornecedor.setEndereco(String.format("End: %s , Bairro: %s, Cidade: %s", endereco.getBody().getLogradouro(),
-					endereco.getBody().getBairro(), endereco.getBody().getCidade()));
+			checkTelefone(fornecedor);
+			
+			fornecedor.setUf(endereco.getBody().getUf());
+			fornecedor.setEndereco(String.format("End: %s , Bairro: %s", endereco.getBody().getLogradouro(),
+					endereco.getBody().getBairro()));
+			fornecedor.setCidade(endereco.getBody().getCidade());
 
 			fornecedor.setEmpresa(empresaRepository.findById(empresaId).get());
 
@@ -189,7 +192,7 @@ public class FornecedorService {
 				checkDocuments(newFornecedor);
 
 				Fornecedor fornecedor = oldFornecedor.get();
-				
+
 				if (newFornecedor.getTipoDocumento().toUpperCase()
 						.equals(TipoDocumentoEnum.CNPJ.getValor().toUpperCase()))
 					checkCnpj(newFornecedor, fornecedor.getEmpresa().getId());
@@ -197,19 +200,22 @@ public class FornecedorService {
 						.equals(TipoDocumentoEnum.CPF.getValor().toUpperCase()))
 					checkCpf(newFornecedor, fornecedor.getEmpresa().getId());
 
-				
 				ResponseEntity<Endereco> endereco = cepService.consumirApi(newFornecedor.getCep());
 
 				if (endereco == null)
 					throw new ValueNotExistException("CEP", newFornecedor.getCep());
 
-				checkDados(newFornecedor, endereco.getBody());
+				checkDados(newFornecedor, endereco.getBody(), fornecedor.getEmpresa().getId());
 
-				fornecedor.setEstado(endereco.getBody().getUf());
+				checkTelefone(newFornecedor);
+				
+				fornecedor.setUf(endereco.getBody().getUf());
 				fornecedor.setEndereco(
-						String.format("End: %s , Bairro: %s, Cidade: %s", endereco.getBody().getLogradouro(),
-								endereco.getBody().getBairro(), endereco.getBody().getCidade()));
+						String.format("End: %s , Bairro: %s", endereco.getBody().getLogradouro(),
+								endereco.getBody().getBairro()));
 
+				fornecedor.setCidade(endereco.getBody().getCidade());
+				
 				fornecedor.setCep(newFornecedor.getCep());
 				fornecedor.setCnpjCpf(newFornecedor.getCnpjCpf());
 				fornecedor.setDataNascimento(newFornecedor.getDataNascimento());
@@ -276,7 +282,6 @@ public class FornecedorService {
 			throws EmptyFieldException, IsDigitException, DataAlreadyExistsException, InvalidFieldSizeException,
 			NoValuesNegativesException, ConfigureValueNotExistException, FieldNotFillException {
 
-		
 		if (fornecedor.getCnpjCpf().isEmpty())
 			throw new EmptyFieldException("CNPJ/CPF");
 
@@ -295,7 +300,7 @@ public class FornecedorService {
 
 		if (fornecedor.getDataNascimento() != null)
 			throw new FieldNotFillException("Data Nascimento");
-		
+
 	}
 
 	public void checkCpf(Fornecedor fornecedor, Long idEmpresa) throws EmptyFieldException, IsDigitException,
@@ -312,8 +317,7 @@ public class FornecedorService {
 			throw new IsDigitException("CNPJ/CPF");
 
 		if (fornecedorRepository.existsByCnpjCpf(fornecedor.getCnpjCpf())
-		 && fornecedorRepository.existsByEmpresaId(idEmpresa)
-		)
+				&& fornecedorRepository.existsByEmpresaId(idEmpresa))
 			throw new DataAlreadyExistsException("CNPJ/CPF por Empresa", fornecedor.getCnpjCpf());
 
 		if (fornecedor.getRg().isEmpty())
@@ -335,7 +339,7 @@ public class FornecedorService {
 
 	}
 
-	public void checkDados(Fornecedor fornecedor, Endereco endereco)
+	public void checkDados(Fornecedor fornecedor, Endereco endereco, Long empresaId)
 			throws EmptyFieldException, IsDigitException, DataAlreadyExistsException, InvalidFieldSizeException,
 			NoValuesNegativesException, ConfigureValueNotExistException, FieldNotFillException, SpecificCaseException {
 
@@ -372,11 +376,28 @@ public class FornecedorService {
 					LocalDateTime.ofInstant(fornecedor.getDataNascimento().toInstant(), ZoneOffset.UTC).toLocalDate(),
 					LocalDate.now()).getYears();
 
-			if (endereco.getUf().toUpperCase().equals("PR") && fornecedor.getTipoDocumento().toUpperCase()
-					.equals(TipoDocumentoEnum.CPF.getValor().toUpperCase()) && age < 18)
-				throw new SpecificCaseException(String.format(
-						"Fornecedor do Paraná com Cpf %s é menor de idade possui %d anos", fornecedor.getCnpjCpf(),age));
+			if (empresaRepository.findById(empresaId).get().getUf().toUpperCase().equals("PR") && fornecedor
+					.getTipoDocumento().toUpperCase().equals(TipoDocumentoEnum.CPF.getValor().toUpperCase())
+					&& age < 18)
+				throw new SpecificCaseException(
+						String.format("Fornecedor do Paraná com Cpf %s é menor de idade possui %d anos",
+								fornecedor.getCnpjCpf(), age));
 		}
+	}
+
+	public void checkTelefone(Fornecedor fornecedor) throws EmptyFieldException, IsDigitException, DataAlreadyExistsException,
+			InvalidFieldSizeException, NoValuesNegativesException, ValueNotExistException {
+
+		if (fornecedor.getTelefone().isEmpty())
+			throw new EmptyFieldException("Telefone");
+
+		if (!fornecedor.getTelefone().matches("[0-9]+"))
+			throw new IsDigitException("Telefone");
+
+		if (fornecedor.getTelefone().length() > 11 || fornecedor.getTelefone().length() < 10)
+			throw new InvalidFieldSizeException("Telefone", fornecedor.getTelefone().length(),
+					"10(para fixo) ou 11(celular)");
+
 	}
 
 }

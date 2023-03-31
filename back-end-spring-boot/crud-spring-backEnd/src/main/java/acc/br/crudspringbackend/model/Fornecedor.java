@@ -38,6 +38,7 @@ public class Fornecedor implements Serializable
 	
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "idFornecedor")
     private Long id;
 
     @Column(name = "tipodocumento", length=1, nullable = false)
@@ -59,15 +60,21 @@ public class Fornecedor implements Serializable
     @Column(name="email", nullable = true)
     private String email;
     
+    @Column(name="telefone", nullable = true)
+    private String telefone;
+    
     @Column(name = "cep",length=8, nullable = false)
     private String cep;
     
-    @Column(name = "estado", length = 2, nullable = false)
-	private String estado;
+    @Column(name = "uf", length = 2, nullable = false)
+	private String uf;
 	
 	@Column(name = "endereco", nullable = false)
 	private String endereco;
     
+	@Column(name = "cidade", nullable = false)
+	private String cidade;
+	
     @ManyToOne
     @JoinColumn(name = "empresaIdEmpresa",referencedColumnName = "idEmpresa",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
