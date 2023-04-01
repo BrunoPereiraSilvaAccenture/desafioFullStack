@@ -9,7 +9,7 @@ body {
 }
 
 .w-10p {
-  width: 10%;
+  width: 20%;
 }
 
 .ml-15 {
@@ -75,4 +75,11 @@ body {
 
 .mb-5{
   margin-bottom: 5%;
+}
+
+.bbb{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin: 30px;
 }

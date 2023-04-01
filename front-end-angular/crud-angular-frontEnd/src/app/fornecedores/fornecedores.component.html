@@ -20,7 +20,7 @@
 
 
         <ng-container matColumnDef="idFornecedor">
-          <th mat-header-cell *matHeaderCellDef> N°. </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> N°. </th>
           <td mat-cell *matCellDef="let element ; let i = index"> {{i+1}} </td>
         </ng-container>
         
@@ -99,7 +99,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
         <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" colspan="4">Empresa não encontrada "{{input.value}}"</td>
+          <td class="mat-cell" colspan="4">Fornecedor não encontrada "{{input.value}}"</td>
         </tr>
 
       </table>
@@ -109,7 +109,7 @@
     <mat-card-actions>
 
       <a mat-raised-button color="primary" [routerLink]="['/']" class="mr-10">Home</a>
-      <a mat-raised-button color="accent" (click)="createNewEmpresa()">Criar Nova Empresa</a>
+      <a mat-raised-button color="accent" (click)="createNewEmpresa()">Criar Novo Fornecedor</a>
 
     </mat-card-actions>
 

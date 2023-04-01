@@ -17,7 +17,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressBarModule} from '@angular/material/progress-bar';
-import {MatSortModule} from '@angular/material/sort';
+import {MatGridListModule} from '@angular/material/grid-list';
 
 @NgModule({
   imports: [
@@ -39,7 +39,7 @@ import {MatSortModule} from '@angular/material/sort';
     MatSnackBarModule,
     MatProgressBarModule,
     MatPaginatorModule,
-    MatSortModule
+    MatGridListModule
    ],
   exports: [
     MatToolbarModule,
@@ -59,7 +59,7 @@ import {MatSortModule} from '@angular/material/sort';
     MatNativeDateModule,
     MatSnackBarModule,
     MatProgressBarModule,
-    MatPaginatorModule,MatSortModule
+    MatPaginatorModule,MatGridListModule
   ]
 })
 export class MaterialModule { }
