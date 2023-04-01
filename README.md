@@ -10,6 +10,7 @@ BACK_END:
 ->STS 4(version4.17.2)
 ->Swagger
 ->Postman
+gerar token (get => api/login  body => {"username":"accentureBR","password":"accentureBR@2023"})
 
 BANCO DE DADOS:
 ->Banco MySQL
