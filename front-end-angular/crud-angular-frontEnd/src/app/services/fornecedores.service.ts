@@ -1,20 +1,17 @@
-import { Empresas } from './../_model/empresas';
-import {
-  HttpClient,
-  HttpHeaders
-} from '@angular/common/http';
+import { Fornecedores } from './../_model/fornecedores';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { first} from 'rxjs';
+import { first } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
-export class EmpresasService implements OnInit {
-  private readonly API_POST = 'api/empresa/';
-  private readonly API_GET = 'api/empresa/';
-  private readonly API_PUT = 'api/empresa/';
-  private readonly API_DELETE = 'api/empresa/';
+export class FornecedoresService implements OnInit{
+  private readonly API_POST = 'api/empresa/{id}/fornecedor/';
+  private readonly API_GET = 'api/fornecedor/';
+  private readonly API_PUT = 'api/fornecedor/';
+  private readonly API_DELETE = 'api/fornecedor/';
   private readonly API_POST_TOKEN = 'api/login';
 
   constructor(private httpclient: HttpClient, private _snackBar: MatSnackBar) {
@@ -23,39 +20,43 @@ export class EmpresasService implements OnInit {
 
   ngOnInit(): void {}
 
-  saveNew(record: {
-    cnpj: string;
-    nomefantasia: string;
+  saveNewFornecedor(record: {
+    tipodocumento:string;
+    cnpjcpf: string;
+    nome: string;
     cep: string;
     telefone: string;
-  }) {
+    email:string;
+    rg:string;
+    datanascimento:string;
+  }, id: string) {
     let headers = new HttpHeaders().append(
       'Authorization',
       'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhY2NlbnR1cmVCUiIsImV4cCI6MTY4MTA5MDAxNX0.AUfJAdv54qxyRB09A1XNUJN4ClMFs52rp0B78PtPKEgpI2ob0RtrdVdgh3976CVEK0xTtun2-CcQ2YaClF4EUQ'
     );
 
     return this.httpclient
-      .post<Empresas>(`${this.API_POST}`, record, { headers: headers })
-      .pipe(first());
+    .post<Fornecedores>(`${this.API_POST.replaceAll('{id}',id)}`, record, { headers: headers })
+    .pipe(first());
   }
 
-  saveUpdate(
-    record: {
-      cnpj: string;
-      nomefantasia: string;
-      cep: string;
-      telefone: string;
-    },
-    id: string
-  ) {
+  upadateFornecedor(record: {
+    tipodocumento:string;
+    cnpjcpf: string;
+    nome: string;
+    cep: string;
+    telefone: string;
+    email:string;
+    rg:string;
+    datanascimento:string;
+  }, id: string) {
     let headers = new HttpHeaders().append(
       'Authorization',
       'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhY2NlbnR1cmVCUiIsImV4cCI6MTY4MTA5MDAxNX0.AUfJAdv54qxyRB09A1XNUJN4ClMFs52rp0B78PtPKEgpI2ob0RtrdVdgh3976CVEK0xTtun2-CcQ2YaClF4EUQ'
     );
-
     return this.httpclient
-      .put<Empresas>(`${this.API_PUT}${id}`, record, { headers: headers })
-      .pipe(first());
+    .put<Fornecedores>(`${this.API_PUT}${id}`, record, { headers: headers })
+    .pipe(first());
   }
 
   delete(id: string) {
@@ -69,12 +70,12 @@ export class EmpresasService implements OnInit {
       .pipe(first());
   }
 
-  listEmpresas() {
+  listFornecedores() {
     
     let headers = new HttpHeaders().append('Authorization', 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhY2NlbnR1cmVCUiIsImV4cCI6MTY4MTA5MDAxNX0.AUfJAdv54qxyRB09A1XNUJN4ClMFs52rp0B78PtPKEgpI2ob0RtrdVdgh3976CVEK0xTtun2-CcQ2YaClF4EUQ');
 
     return this.httpclient
-      .get<Empresas[]>(`${this.API_GET}`, { headers: headers })
+      .get<Fornecedores[]>(`${this.API_GET}`, { headers: headers })
       .pipe(first());
   }
 

@@ -27,9 +27,12 @@ export class EmpresasComponent implements OnInit{
     private _snackBar: MatSnackBar){};
 
   ngOnInit(): void {
+
     this.empresasService.listEmpresas().subscribe(things => {
       this.dataSource.data = things;
   });
+
+ 
     //this.dataSource = this.empresasService.listEmpresas();
   }
 

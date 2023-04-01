@@ -21,3 +21,4 @@ FRONT_END:
 ->SCSS
 ->Angular Material
 ->HTML
+(devido a problemas com CORS deve-se executar => npm run start)

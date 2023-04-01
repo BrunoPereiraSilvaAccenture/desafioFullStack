@@ -20,8 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
 	protected LoginFilter(String url, AuthenticationManager authManager) {
-		super(new AntPathRequestMatcher(url));
+		super(new AntPathRequestMatcher(url));		
 		setAuthenticationManager(authManager);
+		setFilterProcessesUrl("/api/login"); 
 	}
 
 	@Override

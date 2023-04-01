@@ -18,6 +18,10 @@ import { FornecedoresComponent } from './fornecedores/fornecedores.component';
 import { FornecedoresEditComponent } from './fornecedores-edit/fornecedores-edit.component';
 import { FornecedoresFormComponent } from './fornecedores-form/fornecedores-form.component';
 import { HttpClientModule } from '@angular/common/http';
+import { FornecedoresPipe } from './pipes/fornecedores.pipe';
+import { FornecedorescpfcnpjPipe } from './pipes/fornecedorescpfcnpj.pipe';
+import { FornecedoresCepPipe } from './pipes/fornecedores-cep.pipe';
+import { FornecedoresTelefonePipe } from './pipes/fornecedores-telefone.pipe';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,11 @@ import { HttpClientModule } from '@angular/common/http';
     PageNotFoundComponent,
     FornecedoresComponent,
     FornecedoresEditComponent,
-    FornecedoresFormComponent
+    FornecedoresFormComponent,
+    FornecedoresPipe,
+    FornecedorescpfcnpjPipe,
+    FornecedoresCepPipe,
+    FornecedoresTelefonePipe,
   ],
   imports: [
     BrowserModule,

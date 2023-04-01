@@ -46,9 +46,11 @@ export class EmpresasFormComponent implements OnInit{
       uf: [this.editableEmpresa != null ? this.editableEmpresa.uf : '' , Validators.required],
       cidade: [this.editableEmpresa != null ? this.editableEmpresa.cidade : '' , Validators.required],
       telefone: [this.editableEmpresa != null ? this.editableEmpresa.telefone : '' , [Validators.required, Validators.minLength(10),Validators.maxLength(11),Validators.pattern("[0-9]+")]]
-
+      
     });
-
+    this.empresaForm.controls['uf'].disable();
+    this.empresaForm.controls['cidade'].disable();
+    this.empresaForm.controls['endereco'].disable();
   }
 
   public cancel(){
@@ -68,13 +70,13 @@ export class EmpresasFormComponent implements OnInit{
       this.empresaForm.controls['idEmpresa'].value
       ).subscribe(
         (resp)=> {
-          this._snackBar.open(`Empresa ${this.empresaForm.controls['nomefantasia'].value} Editada com Sucesso!`,'',{duration: 10000});
+          this._snackBar.open(`Empresa ${this.empresaForm.controls['nomefantasia'].value} Editada com Sucesso!`,'',{duration: 5000});
           this.closeModalEventEmitter.emit(true);
           window.location.reload();
         },
         (error:HttpErrorResponse)=>
         {
-          this._snackBar.open(`Status: ${error.status}-${error.statusText}; Message: ${error.error}`,'',{duration: 10000});
+          this._snackBar.open(`Status: ${error.status}-${error.statusText}; Message: ${error.error}`,'',{duration: 5000});
           return null;
         });
     }else{
@@ -85,13 +87,13 @@ export class EmpresasFormComponent implements OnInit{
       cep:this.empresaForm.controls['cep'].value,
       telefone:this.empresaForm.controls['telefone'].value}).subscribe(
         (resp)=> {
-          this._snackBar.open(`Empresa ${this.empresaForm.controls['nomefantasia'].value} Salva com Sucesso!`,'',{duration: 10000});
+          this._snackBar.open(`Empresa ${this.empresaForm.controls['nomefantasia'].value} Salva com Sucesso!`,'',{duration: 5000});
           this.closeModalEventEmitter.emit(true);
           window.location.reload();
         },
         (error:HttpErrorResponse)=>
         {
-          this._snackBar.open(`Status: ${error.status}-${error.statusText}; Message: ${error.error}`,'',{duration: 10000});
+          this._snackBar.open(`Status: ${error.status}-${error.statusText}; Message: ${error.error}`,'',{duration: 5000});
           return null;
         });
       }
@@ -105,7 +107,6 @@ export class EmpresasFormComponent implements OnInit{
         this.empresaForm.controls['endereco'].setValue('');
         this.empresaForm.controls['uf'].setValue('');}
      else{
-      this._snackBar.open(data.bairro,'',{duration: 5000});
        this.enderecoGet = data;
        this.empresaForm.controls['cidade'].setValue(data.cidade);
        this.empresaForm.controls['endereco'].setValue(data.logradouro);

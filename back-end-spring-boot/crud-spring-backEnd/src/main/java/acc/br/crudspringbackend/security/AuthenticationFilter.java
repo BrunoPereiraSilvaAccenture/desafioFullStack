@@ -23,6 +23,7 @@ public class AuthenticationFilter extends GenericFilterBean {
 		
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		filterChain.doFilter(request, response);
+		
 	}
 
 }

@@ -43,15 +43,18 @@ public class Fornecedor implements Serializable
     @Column(name = "idFornecedor")
     private Long id;
 
+    @JsonProperty("tipodocumento")
     @Column(name = "tipodocumento", length=1, nullable = false)
     private String tipoDocumento; 
 
+    @JsonProperty("cnpjcpf")
     @Column(name = "cnpjcpf", length = 14, nullable = false)
     private String cnpjCpf; 
 
     @Column(name = "rg", length=8)
     private String rg;
     
+    @JsonProperty("datanascimento")
     @Column(name = "datanascimento")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy", timezone = "GMT-3")
 	private Date dataNascimento;
@@ -78,6 +81,7 @@ public class Fornecedor implements Serializable
 	private String cidade;
 	
     @ManyToOne
+    @JsonProperty("empresaIdEmpresa")
     @JoinColumn(name = "empresaIdEmpresa",referencedColumnName = "idEmpresa",nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Empresa empresa;

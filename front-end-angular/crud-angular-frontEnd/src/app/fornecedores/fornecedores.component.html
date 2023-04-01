@@ -1,1 +1,119 @@
-<p>fornecedores works!</p>
+<div>
+
+  <mat-card class="m-20">
+
+    <mat-card-header>
+
+      <mat-card-title>Gerenciar Fornecedores</mat-card-title>
+
+    </mat-card-header>
+
+
+    <mat-card-content>
+
+      <mat-form-field class="w-100">
+        <mat-label>Buscar Nome Fornecedores</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Empresa" #input>
+      </mat-form-field>
+
+      <table mat-table [dataSource]="dataSource" class="w-100">
+
+
+        <ng-container matColumnDef="idFornecedor">
+          <th mat-header-cell *matHeaderCellDef> N°. </th>
+          <td mat-cell *matCellDef="let element ; let i = index"> {{i+1}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="empresaIdEmpresa">
+          <th mat-header-cell *matHeaderCellDef> Empresa </th>
+          <td mat-cell *matCellDef="let element"> {{element.empresaIdEmpresa.nomefantasia}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef> Nome </th>
+          <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipodocumento">
+          <th mat-header-cell *matHeaderCellDef> Tipo Fornecedor </th>
+          <td mat-cell *matCellDef="let element"> {{element.tipodocumento | fornecedores}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cnpjcpf">
+          <th mat-header-cell *matHeaderCellDef> CNPJ/CPF </th>
+          <td mat-cell *matCellDef="let element"> {{element.cnpjcpf | fornecedorescpfcnpj}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="rg">
+          <th mat-header-cell *matHeaderCellDef> RG </th>
+          <td mat-cell *matCellDef="let element"> {{element.rg}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="datanascimento">
+          <th mat-header-cell *matHeaderCellDef> DT Nascimento </th>
+          <td mat-cell *matCellDef="let element"> {{element.datanascimento}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef> email </th>
+          <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="endereco">
+          <th mat-header-cell *matHeaderCellDef> Endereço </th>
+          <td mat-cell *matCellDef="let element"> {{element.endereco}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cidade">
+          <th mat-header-cell *matHeaderCellDef> cidade </th>
+          <td mat-cell *matCellDef="let element"> {{element.cidade}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="uf">
+          <th mat-header-cell *matHeaderCellDef> UF </th>
+          <td mat-cell *matCellDef="let element"> {{element.uf}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cep">
+          <th mat-header-cell *matHeaderCellDef> CEP </th>
+          <td mat-cell *matCellDef="let element"> {{element.cep | fornecedoresCep}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="telefone">
+          <th mat-header-cell *matHeaderCellDef> Telefone </th>
+          <td mat-cell *matCellDef="let element"> {{element.telefone | fornecedoresTelefone}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> Ações </th>
+          <td mat-cell *matCellDef="let element">
+
+            <button mat-raised-button color="accent" (click)="editEmpresa(element)" class="mr-10">Editar</button>
+            <button mat-raised-button color="warn" (click)="deleteEmpresa(element)">Excluir</button>
+
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="4">Empresa não encontrada "{{input.value}}"</td>
+        </tr>
+
+      </table>
+      </mat-card-content>
+
+
+    <mat-card-actions>
+
+      <a mat-raised-button color="primary" [routerLink]="['/']" class="mr-10">Home</a>
+      <a mat-raised-button color="accent" (click)="createNewEmpresa()">Criar Nova Empresa</a>
+
+    </mat-card-actions>
+
+
+  </mat-card>
+
+</div>
